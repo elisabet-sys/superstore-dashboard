@@ -605,6 +605,10 @@ function renderV3(){
   const d=getDatos();
   destroyChart('v3-furn');destroyChart('v3-matriz');destroyChart('v3-subcat');destroyChart('v3-cat');
 
+  // Definir ANTES del innerHTML para poder usarlos en el template
+  const furnMargen=(d&&d.cat_margen_banda)?d.cat_margen_banda:(d.furn_margen||D.furn_desc.margen);
+  const furnLabel=(d&&d.cat_margen_label)?d.cat_margen_label:'Furniture';
+
   const m=d.kpi6_margen_cat||['3.9%','17.0%','17.4%'];
   const subcatLabels=['Tables','Bookcases','Supplies','Fasteners','Machines','Labels','Art','Envelopes','Furnishings','Appliances','Storage','Chairs','Binders','Paper','Accessories','Phones','Copiers'];
   const subDeficit=d.subcat_profit?subcatLabels.filter((_,i)=>d.subcat_profit[i]<0).map((n,_,arr)=>{
@@ -659,8 +663,6 @@ function renderV3(){
       </div>
     </div>`;
 
-  const furnMargen=(d&&d.cat_margen_banda)?d.cat_margen_banda:(d.furn_margen||D.furn_desc.margen);
-  const furnLabel=(d&&d.cat_margen_label)?d.cat_margen_label:'Furniture';
   const ctx1=document.getElementById('chart-v3-furn').getContext('2d');
   charts['v3-furn']=new Chart(ctx1,{type:'bar',data:{labels:D.furn_desc.labels,datasets:[{label:'Margen medio (%)',data:furnMargen,backgroundColor:furnMargen.map(v=>v===null?'transparent':v>=0?NEGRO:DORADO),borderRadius:3,barPercentage:.6}]},
     options:{...chartDefaults,indexAxis:'y',plugins:{...chartDefaults.plugins,legend:{display:false}},
